@@ -26,10 +26,6 @@ export function Gallery({ artworks, title = "My Gallery" }: Props) {
                 {title}
               </span>
             </h1>
-
-            <p className="mt-2 text-sm opacity-70 sm:text-base">
-              Saved works — your living moodboard.
-            </p>
           </div>
 
           <Link to="/" className="btn btn-primary rounded-full">
