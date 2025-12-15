@@ -1,13 +1,11 @@
 import { z } from "zod";
 
+// NOTE FROM DOCS: "We never show any empty strings"  --------> keine leeren Strings ("")
+// NOTE FROM DOCS: "We prefer to always show all fields" -----> man muss mit #null rechnen
+
 export const ArtworkSchema = z.object({
-  // coerce: wandel String in Nummer um (wichtig: auch Boolean (true/false))
-  // int: Ganzzahl
-  // positive: x > 0
   id: z.coerce.number().int().positive(),
 
-  // nullish:  String || null || undefined
-  // transform: falls null/undefined/""/nur Whitespaces → "Untitled"
   title: z
     .string()
     .nullish()
