@@ -1,16 +1,17 @@
 import { type FormEvent, useState } from "react";
 import { searchArtworks } from "../api/aic";
 import type { Artwork } from "../schemas/artwork.schema";
+import { ArtworkCard } from "./ArtworkCard";
 
+//----------------------------------------------------------------------------
+// function: SearchSection ---------------------------------------------------
+//----------------------------------------------------------------------------
 export function SearchSection() {
   const [query, setQuery] = useState("");
   const [results, setResults] = useState<Artwork[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  //-----------------------------------------------------------------------
-  // function: onSubmit ---------------------------------------------------
-  //-----------------------------------------------------------------------
   async function onSubmit(e: FormEvent) {
     e.preventDefault();
 
@@ -39,46 +40,46 @@ export function SearchSection() {
   // return ---------------------------------------------------------------
   //-----------------------------------------------------------------------
   return (
-    <section className="mt-4">
-      <form onSubmit={onSubmit} className="flex gap-2">
+    <section className="mt-6">
+      <form onSubmit={onSubmit} className="flex flex-col gap-2 sm:flex-row">
         <input
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder="Search artworks (e.g. picasso, cats)..."
-          className="w-full rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm outline-none focus:border-zinc-500 focus:ring-2 focus:ring-zinc-200 disabled:opacity-60 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100 dark:focus:ring-zinc-800"
+          className="input input-bordered w-full"
         />
 
         <button
           type="submit"
           disabled={loading}
-          className="rounded-md bg-zinc-900 px-4 py-2 text-sm font-medium text-white hover:bg-zinc-800 disabled:cursor-not-allowed disabled:opacity-60 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-200"
+          className={`btn btn-primary sm:w-auto ${
+            loading ? "btn-disabled" : ""
+          }`}
         >
           {loading ? "Searching…" : "Search"}
         </button>
       </form>
 
       {error && (
-        <p className="mt-3 rounded-md border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-800 dark:border-red-900/40 dark:bg-red-950/40 dark:text-red-200">
-          {error}
-        </p>
+        <div role="alert" className="alert alert-error mt-3">
+          <span>{error}</span>
+        </div>
       )}
 
       {!loading && !error && results.length > 0 && (
-        <p className="mt-4 text-sm text-zinc-700 dark:text-zinc-300">
-          Found: <span className="font-semibold">{results.length}</span>
-        </p>
+        <div className="mt-4 flex items-center gap-2 text-sm">
+          <span className="text-base-content/70">Found</span>
+          <span className="badge badge-neutral">{results.length}</span>
+        </div>
       )}
 
-      <ul className="mt-3 grid gap-2">
+      <ul className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
         {results.map((a) => (
           <li
             key={a.id}
-            className="rounded-md border border-zinc-200 bg-white p-3 text-sm dark:border-zinc-800 dark:bg-zinc-900"
+            className="transition-transform duration-200 hover:-translate-y-0.5 hover:shadow-md rounded-box"
           >
-            <div className="font-semibold">{a.title}</div>
-            <div className="text-zinc-600 dark:text-zinc-400">
-              {a.artist_title}
-            </div>
+            <ArtworkCard artwork={a} />
           </li>
         ))}
       </ul>
