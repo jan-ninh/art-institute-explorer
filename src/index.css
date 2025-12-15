@@ -1,2 +1,28 @@
 @import "tailwindcss";
 @plugin "daisyui";
+
+/* zeigt immer die rechte Scrollbar */
+html {
+  overflow-y: scroll;
+  scrollbar-gutter: stable;
+}
+
+html {
+  font-family: "DM Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI",
+    Roboto, Arial, sans-serif;
+}
+
+h1,
+h2,
+h3 {
+  font-family: "Fraunces", ui-serif, Georgia, "Times New Roman", serif;
+}
+
+/* ✅ Footer/Meta font */
+:root {
+  --font-meta: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Monaco,
+    Consolas, "Liberation Mono", "Courier New", monospace;
+}
+.font-meta {
+  font-family: var(--font-meta);
+}

@@ -8,7 +8,7 @@ type Props = {
 };
 
 function getIiifImageUrl(imageId: string, width: number) {
-  // AIC IIIF pattern: /full/{width},/0/default.jpg :contentReference[oaicite:1]{index=1}
+  // AIC IIIF pattern: /full/{width},/0/default.jpg
   return `https://www.artic.edu/iiif/2/${imageId}/full/${width},/0/default.jpg`;
 }
 
@@ -23,45 +23,63 @@ export function ArtworkCard({ artwork, actions, imgWidth = 400 }: Props) {
 
   const artworkPageUrl = `https://www.artic.edu/artworks/${artwork.id}`;
 
-  //-----------------------------------------------------------------------
-  // return ---------------------------------------------------------------
-  //-----------------------------------------------------------------------
   return (
-    <div className="card bg-base-100 shadow">
-      <figure className="aspect-[4/3] bg-base-200">
+    <article className="group overflow-hidden rounded-[1.35rem] border border-base-300/30 bg-base-100/50 shadow-lg backdrop-blur transition duration-200 hover:-translate-y-1 hover:shadow-2xl">
+      <figure className="relative aspect-[4/3] overflow-hidden bg-gradient-to-br from-base-200 via-base-200 to-base-100">
         {imageUrl ? (
           <img
             src={imageUrl}
             alt={artwork.title}
             loading="lazy"
-            className="h-full w-full object-cover"
+            className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
           />
         ) : (
-          <div className="flex h-full w-full items-center justify-center text-sm opacity-60">
-            No image
+          <div className="flex h-full w-full items-center justify-center">
+            <div className="rounded-full border border-base-300/40 bg-base-100/60 px-4 py-2 text-sm opacity-70 backdrop-blur">
+              No image
+            </div>
           </div>
         )}
+
+        {/* overlay for “museum label” vibe */}
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-base-100/90 via-base-100/0 to-base-100/0 opacity-0 transition duration-300 group-hover:opacity-100" />
+
+        <div className="absolute left-3 top-3 flex items-center gap-2">
+          <span className="badge badge-ghost border border-base-300/40 bg-base-100/60 backdrop-blur">
+            AIC #{artwork.id}
+          </span>
+          {hasImage && (
+            <span className="badge badge-outline bg-base-100/40 backdrop-blur">
+              IIIF
+            </span>
+          )}
+        </div>
       </figure>
 
-      <div className="card-body gap-2">
-        <div>
-          <h3 className="card-title text-base">{artwork.title}</h3>
-          <p className="text-sm opacity-70">{artwork.artist_title}</p>
+      <div className="p-4">
+        <div className="min-w-0">
+          <h3 className="text-base font-bold leading-snug">{artwork.title}</h3>
+          <p className="mt-1 text-sm opacity-70">{artwork.artist_title}</p>
         </div>
 
-        <div className="card-actions items-center justify-between">
+        <div className="mt-4 flex items-center justify-between gap-3">
           <a
-            className="link link-primary text-sm"
+            className="btn btn-ghost btn-xs rounded-full"
             href={artworkPageUrl}
             target="_blank"
             rel="noreferrer"
+            title="Open on Art Institute of Chicago"
           >
-            Open on AIC
+            Open
           </a>
 
-          {actions}
+          {actions ? (
+            <div className="flex items-center gap-2">{actions}</div>
+          ) : (
+            <span />
+          )}
         </div>
       </div>
-    </div>
+    </article>
   );
 }
