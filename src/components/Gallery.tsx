@@ -8,10 +8,13 @@ type Props = {
 
 export function Gallery({ artworks, title = "My Gallery" }: Props) {
   return (
-    <section className="mt-6">
-      <div className="mb-4 flex items-center justify-between">
-        <h2 className="text-xl font-semibold">{title}</h2>
-        <span className="badge badge-neutral">{artworks.length}</span>
+    <section className="space-y-4">
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <div className="flex items-center gap-3">
+          <h3 className="text-xl font-bold">{title}</h3>
+          <span className="badge badge-neutral">{artworks.length}</span>
+        </div>
+        <span className="text-xs opacity-60">Saved artworks</span>
       </div>
 
       {artworks.length === 0 ? (
@@ -21,7 +24,10 @@ export function Gallery({ artworks, title = "My Gallery" }: Props) {
       ) : (
         <ul className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
           {artworks.map((a) => (
-            <li key={a.id} className="rounded-box">
+            <li
+              key={a.id}
+              className="rounded-box transition duration-200 hover:-translate-y-1 hover:shadow-xl"
+            >
               <ArtworkCard artwork={a} />
             </li>
           ))}
