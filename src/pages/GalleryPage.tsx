@@ -11,9 +11,7 @@ export function GalleryPage() {
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div>
           <h2 className="text-2xl font-bold">Gallery</h2>
-          <p className="text-sm opacity-70">
-            Your saved artworks (stored in localStorage).
-          </p>
+          <p className="text-sm opacity-70">Saved artworks</p>
         </div>
         <div className="badge badge-outline">Favorites</div>
       </div>
