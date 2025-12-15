@@ -2,6 +2,7 @@ import { type FormEvent, useMemo, useState } from "react";
 import { searchArtworks } from "../api/aic";
 import type { Artwork } from "../schemas/artwork.schema";
 import { ArtworkCard } from "./ArtworkCard";
+import { addToGallery, getGallery } from "../storage/galleryStorage";
 
 //----------------------------------------------------------------------------
 // function: SearchSection ---------------------------------------------------
@@ -11,6 +12,11 @@ export function SearchSection() {
   const [results, setResults] = useState<Artwork[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  // für Button-Status ("Saved")
+  const [galleryIds, setGalleryIds] = useState<Set<number>>(
+    () => new Set(getGallery().map((a) => a.id))
+  );
 
   const suggestions = useMemo(
     () => ["monet", "picasso", "cats", "portrait", "impressionism", "ukiyo-e"],
@@ -44,6 +50,11 @@ export function SearchSection() {
   async function onSubmit(e: FormEvent) {
     e.preventDefault();
     await runSearch(query);
+  }
+
+  function handleAdd(artwork: Artwork) {
+    const next = addToGallery(artwork);
+    setGalleryIds(new Set(next.map((a) => a.id)));
   }
 
   //-----------------------------------------------------------------------
@@ -135,14 +146,30 @@ export function SearchSection() {
 
       {!loading && results.length > 0 && (
         <ul className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-          {results.map((a) => (
-            <li
-              key={a.id}
-              className="rounded-box transition duration-200 hover:-translate-y-1 hover:shadow-xl"
-            >
-              <ArtworkCard artwork={a} />
-            </li>
-          ))}
+          {results.map((a) => {
+            const isSaved = galleryIds.has(a.id);
+
+            return (
+              <li
+                key={a.id}
+                className="rounded-box transition duration-200 hover:-translate-y-1 hover:shadow-xl"
+              >
+                <ArtworkCard
+                  artwork={a}
+                  actions={
+                    <button
+                      className="btn btn-sm btn-secondary"
+                      disabled={isSaved}
+                      onClick={() => handleAdd(a)}
+                      title={isSaved ? "Already saved" : "Add to Gallery"}
+                    >
+                      {isSaved ? "Saved" : "Add"}
+                    </button>
+                  }
+                />
+              </li>
+            );
+          })}
         </ul>
       )}
     </section>
