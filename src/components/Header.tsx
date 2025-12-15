@@ -1,4 +1,5 @@
 import { NavLink } from "react-router";
+import paintingIcon from "../assets/icons/painting-1.svg";
 
 export function Header() {
   const linkClass = ({ isActive }: { isActive: boolean }) =>
@@ -10,12 +11,12 @@ export function Header() {
       <div className="sticky top-0 z-50">
         <div className="navbar rounded-box border border-base-300/40 bg-base-100/70 shadow-md backdrop-blur">
           <div className="navbar-start gap-3">
-            {/* Logo placeholder — später easy ersetzen durch ein <img /> */}
-            {/* Beispiel: <img src="/logo.png" className="h-10 w-10 rounded-xl" alt="Logo" /> */}
             <div className="avatar placeholder">
-              <div className="w-10 rounded-xl bg-primary/15 text-primary">
-                <span className="text-lg font-black">A</span>
-              </div>
+              <img
+                src={paintingIcon}
+                alt="Painting icon"
+                className="h-10 w-10"
+              />
             </div>
 
             <div className="min-w-0">
