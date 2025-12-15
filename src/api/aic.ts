@@ -3,14 +3,11 @@ import { ArtworkSchema, type Artwork } from "../schemas/artwork.schema";
 
 const AIC_SEARCH_URL = "https://api.artic.edu/api/v1/artworks/search";
 
-// Schema anwenden auf API Response
 const AicSearchResponseSchema = z.object({
+  // NOTE: Response Felder sind mindestens #data und #pagination (top-level-fields)
+  // NOTE: Schema nur auf data anwenden
   data: z.array(ArtworkSchema),
-  config: z
-    .object({
-      iiif_url: z.string(),
-    })
-    .optional(),
+  config: z.object({ iiif_url: z.string() }).optional(),
 });
 
 //-----------------------------------------------------------------------
@@ -42,7 +39,7 @@ export async function searchArtworks(
     throw new Error("Invalid API data (failed Zod validation)");
   }
 
-  // 1st data: Zod
-  // 2nd data: API Field
+  // NOTE: 1st data: Zod
+  // NOTE: 2nd data: API Field
   return parsed.data.data;
 }
