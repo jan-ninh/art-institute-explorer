@@ -5,7 +5,7 @@ import { Footer } from "./components/Footer";
 export default function App() {
   return (
     <div className="relative min-h-screen overflow-hidden bg-base-200">
-      {/* Background Orbs (fixed, non-interactive) */}
+      {/* Background Orbs */}
       <div className="pointer-events-none fixed inset-0 z-0">
         <div className="absolute -left-40 -top-40 h-[28rem] w-[28rem] rounded-full bg-primary/20 blur-3xl" />
         <div className="absolute -right-40 top-10 h-[30rem] w-[30rem] rounded-full bg-secondary/20 blur-3xl" />
