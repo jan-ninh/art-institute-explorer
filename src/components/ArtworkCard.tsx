@@ -1,10 +1,12 @@
 import type { ReactNode } from "react";
 import type { Artwork } from "../schemas/artwork.schema";
+import { X } from "lucide-react";
 
 type Props = {
   artwork: Artwork;
   actions?: ReactNode;
   imgWidth?: number; // IIIF width (400 für Cards)
+  onDelete?: (id: number) => void;
 };
 
 function getIiifImageUrl(imageId: string, width: number) {
@@ -15,7 +17,12 @@ function getIiifImageUrl(imageId: string, width: number) {
 //----------------------------------------------------------------------------
 // function: ArtworkCard -----------------------------------------------------
 //----------------------------------------------------------------------------
-export function ArtworkCard({ artwork, actions, imgWidth = 400 }: Props) {
+export function ArtworkCard({
+  artwork,
+  actions,
+  imgWidth = 400,
+  onDelete,
+}: Props) {
   const hasImage = Boolean(artwork.image_id);
   const imageUrl = hasImage
     ? getIiifImageUrl(artwork.image_id as string, imgWidth)
@@ -41,17 +48,32 @@ export function ArtworkCard({ artwork, actions, imgWidth = 400 }: Props) {
           </div>
         )}
 
-        {/* overlay for “museum label” vibe */}
+        {/* overlay for "museum label" vibe */}
         <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-base-100/90 via-base-100/0 to-base-100/0 opacity-0 transition duration-300 group-hover:opacity-100" />
 
-        <div className="absolute left-3 top-3 flex items-center gap-2">
-          <span className="badge badge-ghost border border-base-300/40 bg-base-100/60 backdrop-blur">
-            AIC #{artwork.id}
-          </span>
-          {hasImage && (
-            <span className="badge badge-outline bg-base-100/40 backdrop-blur">
-              IIIF
+        <div className="absolute inset-x-3 top-3 z-10 flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <span className="badge badge-ghost border border-base-300/40 bg-base-100/60 backdrop-blur">
+              AIC #{artwork.id}
             </span>
+
+            {hasImage && (
+              <span className="badge badge-outline bg-base-100/40 backdrop-blur">
+                IIIF
+              </span>
+            )}
+          </div>
+
+          {onDelete && (
+            <button
+              type="button"
+              aria-label="Remove artwork"
+              title="Remove"
+              onClick={() => onDelete(artwork.id)}
+              className="inline-flex h-7 w-7 items-center justify-center rounded-full border border-base-300/40 bg-base-100/55 text-sm font-bold leading-none text-base-content/70 backdrop-blur transition hover:bg-base-100/70 hover:text-base-content hover:border-base-300/60 active:bg-base-100/80"
+            >
+              <X className="h-4 w-4" />
+            </button>
           )}
         </div>
       </figure>
