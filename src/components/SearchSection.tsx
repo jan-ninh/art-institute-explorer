@@ -79,8 +79,9 @@ export function SearchSection() {
         <div className="pointer-events-none absolute left-1/2 top-10 h-56 w-56 -translate-x-1/2 rounded-full bg-accent/10 blur-3xl" />
 
         <div className="grid gap-6 lg:grid-cols-[0.95fr_1.05fr] lg:items-end">
-          <div>
-            <div className="flex flex-wrap items-center gap-2">
+          {/* LEFT: title block */}
+          <div className="text-center lg:text-left">
+            <div className="flex flex-wrap items-center justify-center gap-2 lg:justify-start">
               <span className="badge badge-outline">Explore</span>
               <span className="badge badge-ghost">AIC • IIIF ready</span>
               {results.length > 0 && !loading && !error && (
@@ -97,12 +98,13 @@ export function SearchSection() {
               </span>
             </h1>
 
-            <p className="mt-3 max-w-prose text-sm opacity-70 sm:text-base">
-              Try artists, movements, motifs — save what hits, open it on AIC in
-              crisp IIIF quality.
+            <p className="mt-3 mx-auto max-w-[44ch] lg:mx-0 lg:max-w-[52ch] text-sm opacity-70 sm:text-base text-balance">
+              Discover artists, movements, and motifs. View in IIIF quality.
+              Curate your own gallery!
             </p>
           </div>
 
+          {/* RIGHT: search form */}
           <form onSubmit={onSubmit} className="space-y-3">
             <div className="join w-full">
               <input
@@ -133,7 +135,6 @@ export function SearchSection() {
             </div>
 
             <div className="flex items-center justify-between gap-3">
-              {/* left side: label + horizontal scroll row */}
               <div className="flex min-w-0 flex-1 items-center gap-2">
                 <span className="shrink-0 text-xs opacity-60">
                   Quick picks:
@@ -163,7 +164,6 @@ export function SearchSection() {
                 </div>
               </div>
 
-              {/* right side: never wraps */}
               <button
                 type="button"
                 className="btn btn-ghost btn-sm shrink-0 rounded-full"
