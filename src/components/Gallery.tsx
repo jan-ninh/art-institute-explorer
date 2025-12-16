@@ -2,12 +2,16 @@ import { Link } from "react-router";
 import type { Artwork } from "../schemas/artwork.schema";
 import { ArtworkCard } from "./ArtworkCard";
 
+const GRID_LAYOUT_CLASSES =
+  "grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4";
+
 type Props = {
   artworks: Artwork[];
   title?: string;
+  onDelete?: (id: number) => void;
 };
 
-export function Gallery({ artworks, title = "My Gallery" }: Props) {
+export function Gallery({ artworks, title = "My Gallery", onDelete }: Props) {
   return (
     <section className="space-y-6">
       <div className="relative overflow-hidden rounded-[2rem] border border-base-300/30 bg-base-100/50 p-6 shadow-xl backdrop-blur">
@@ -49,10 +53,10 @@ export function Gallery({ artworks, title = "My Gallery" }: Props) {
           </div>
         </div>
       ) : (
-        <ul className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        <ul className={GRID_LAYOUT_CLASSES}>
           {artworks.map((a) => (
             <li key={a.id}>
-              <ArtworkCard artwork={a} />
+              <ArtworkCard artwork={a} onDelete={onDelete} />
             </li>
           ))}
         </ul>
