@@ -1,8 +1,9 @@
-import { type FormEvent, useMemo, useState } from "react";
+import { type FormEvent, useState } from "react";
 import { searchArtworks } from "../api/aic";
 import type { Artwork } from "../schemas/artwork.schema";
 import { ArtworkCard } from "./ArtworkCard";
 import { addToGallery, getGallery } from "../storage/galleryStorage";
+import { getRandomQuickPicks } from "../functions/getRandomQuickPicks";
 
 //----------------------------------------------------------------------------
 // function: SearchSection ---------------------------------------------------
@@ -13,14 +14,15 @@ export function SearchSection() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  // für Button-Status ("Saved")
+  // Button-Status ("Saved")
   const [galleryIds, setGalleryIds] = useState<Set<number>>(
     () => new Set(getGallery().map((a) => a.id))
   );
 
-  const suggestions = useMemo(
-    () => ["monet", "picasso", "cats", "portrait", "impressionism", "ukiyo-e"],
-    []
+  // Bei jedem Mount: neue zufällige Quick Picks
+  const NUMBER_QUICK_PICKS = 5;
+  const [suggestions, setSuggestions] = useState<string[]>(() =>
+    getRandomQuickPicks(NUMBER_QUICK_PICKS)
   );
 
   const canSearch = query.trim().length > 0 && !loading;
@@ -61,6 +63,7 @@ export function SearchSection() {
     setQuery("");
     setResults([]);
     setError(null);
+    setSuggestions(getRandomQuickPicks(NUMBER_QUICK_PICKS));
   }
 
   //-----------------------------------------------------------------------
@@ -68,9 +71,9 @@ export function SearchSection() {
   //-----------------------------------------------------------------------
   return (
     <section className="space-y-6">
-      {/* “Poster” panel */}
+      {/* "Poster" */}
       <div className="relative overflow-hidden rounded-[2rem] border border-base-300/30 bg-base-100/50 p-6 shadow-xl backdrop-blur">
-        {/* orbs */}
+        {/* Orbs */}
         <div className="pointer-events-none absolute -left-24 -top-24 h-64 w-64 rounded-full bg-primary/25 blur-3xl" />
         <div className="pointer-events-none absolute -right-28 -bottom-28 h-72 w-72 rounded-full bg-secondary/20 blur-3xl" />
         <div className="pointer-events-none absolute left-1/2 top-10 h-56 w-56 -translate-x-1/2 rounded-full bg-accent/10 blur-3xl" />
@@ -129,27 +132,41 @@ export function SearchSection() {
               </button>
             </div>
 
-            <div className="flex flex-wrap items-center justify-between gap-2">
-              <div className="flex flex-wrap items-center gap-2">
-                <span className="text-xs opacity-60">Quick picks:</span>
-                {suggestions.map((s) => (
-                  <button
-                    key={s}
-                    type="button"
-                    className="btn btn-xs rounded-full border border-base-300/40 bg-base-100/40 backdrop-blur hover:shadow"
-                    onClick={() => {
-                      setQuery(s);
-                      void runSearch(s);
-                    }}
-                  >
-                    {s}
-                  </button>
-                ))}
+            <div className="flex items-center justify-between gap-3">
+              {/* left side: label + horizontal scroll row */}
+              <div className="flex min-w-0 flex-1 items-center gap-2">
+                <span className="shrink-0 text-xs opacity-60">
+                  Quick picks:
+                </span>
+
+                <div
+                  className={[
+                    "flex min-w-0 flex-1 items-center gap-2",
+                    "overflow-x-auto whitespace-nowrap",
+                    "[-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden",
+                  ].join(" ")}
+                >
+                  {suggestions.map((s) => (
+                    <button
+                      key={s}
+                      type="button"
+                      className="btn btn-xs shrink-0 rounded-full border border-base-300/40 bg-base-100/40 backdrop-blur hover:shadow"
+                      onClick={() => {
+                        setQuery(s);
+                        void runSearch(s);
+                      }}
+                      title={s}
+                    >
+                      {s}
+                    </button>
+                  ))}
+                </div>
               </div>
 
+              {/* right side: never wraps */}
               <button
                 type="button"
-                className="btn btn-ghost btn-sm rounded-full"
+                className="btn btn-ghost btn-sm shrink-0 rounded-full"
                 onClick={clearAll}
                 disabled={loading && query.trim().length > 0}
                 title="Clear search"
