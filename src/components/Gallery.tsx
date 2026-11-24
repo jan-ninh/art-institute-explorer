@@ -1,17 +1,19 @@
 import { Link } from "react-router";
-import type { Artwork } from "../schemas/artwork.schema";
+import type { GalleryArtwork } from "../storage/galleryStorage";
 import { ArtworkCard } from "./ArtworkCard";
+import { ArtworkNoteEditor } from "./ArtworkNoteEditor";
 
 const GRID_LAYOUT_CLASSES =
   "grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4";
 
 type Props = {
-  artworks: Artwork[];
+  artworks: GalleryArtwork[];
   title?: string;
   onDelete?: (id: number) => void;
+  onSaveNote: (id: number, note: string) => void;
 };
 
-export function Gallery({ artworks, title = "My Gallery", onDelete }: Props) {
+export function Gallery({ artworks, title = "My Gallery", onDelete, onSaveNote }: Props) {
   return (
     <section className="space-y-6">
       <div className="relative overflow-hidden rounded-[2rem] border border-base-300/30 bg-base-100/50 p-6 shadow-xl backdrop-blur">
@@ -56,7 +58,13 @@ export function Gallery({ artworks, title = "My Gallery", onDelete }: Props) {
         <ul className={GRID_LAYOUT_CLASSES}>
           {artworks.map((a) => (
             <li key={a.id}>
-              <ArtworkCard artwork={a} onDelete={onDelete} />
+              <ArtworkCard artwork={a} onDelete={onDelete}>
+                <ArtworkNoteEditor
+                  artworkTitle={a.title}
+                  note={a.note}
+                  onSave={(note) => onSaveNote(a.id, note)}
+                />
+              </ArtworkCard>
             </li>
           ))}
         </ul>

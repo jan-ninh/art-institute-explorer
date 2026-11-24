@@ -1,14 +1,22 @@
 import { useState } from "react";
 import { Gallery } from "../components/Gallery";
-import type { Artwork } from "../schemas/artwork.schema";
-import { getGallery, removeFromGallery } from "../storage/galleryStorage";
+import {
+  getGallery,
+  removeFromGallery,
+  updateGalleryNote,
+  type GalleryArtwork,
+} from "../storage/galleryStorage";
 
 export function GalleryPage() {
-  const [artworks, setArtworks] = useState<Artwork[]>(() => getGallery());
+  const [artworks, setArtworks] = useState<GalleryArtwork[]>(() => getGallery());
 
   function handleDelete(id: number) {
     const next = removeFromGallery(id);
     setArtworks(next);
+  }
+
+  function handleSaveNote(id: number, note: string) {
+    setArtworks(updateGalleryNote(id, note));
   }
 
   return (
@@ -21,7 +29,12 @@ export function GalleryPage() {
         <div className="badge badge-outline">Favorites</div>
       </div>
 
-      <Gallery artworks={artworks} title="My Gallery" onDelete={handleDelete} />
+      <Gallery
+        artworks={artworks}
+        title="My Gallery"
+        onDelete={handleDelete}
+        onSaveNote={handleSaveNote}
+      />
     </div>
   );
 }

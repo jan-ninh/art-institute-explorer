@@ -17,6 +17,7 @@ The project focuses on external API integration, runtime data validation with Zo
 - save artworks to a personal gallery
 - prevent duplicate gallery entries
 - remove saved artworks
+- create, edit and delete a personal note for each saved artwork
 - persist the gallery with `localStorage`
 - dedicated Explore and Gallery routes
 - responsive artwork grid and UI
@@ -86,10 +87,13 @@ The persistence layer is kept separate from the UI and provides dedicated functi
 - saving the gallery
 - adding artworks
 - removing artworks
+- updating personal notes by artwork ID
 
 Stored data is also validated with Zod when it is read from `localStorage`.
 
 Duplicate artworks are prevented by checking their artwork ID before adding them to the gallery.
+
+Each saved artwork can have one personal note. Notes are saved explicitly in the gallery and persist alongside the artwork in localStorage. Existing gallery entries without a note are supported automatically. Deleting an artwork removes its note; deleting only the note keeps the artwork. Notes are local to the current browser, not synced to an account.
 
 ---
 
@@ -147,4 +151,11 @@ Create a production build with:
 
 ```bash
 npm run build
+```
+
+Run the storage regression tests and lint checks:
+
+```bash
+npm test
+npm run lint
 ```

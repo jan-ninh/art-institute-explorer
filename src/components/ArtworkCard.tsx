@@ -5,6 +5,7 @@ import { X } from "lucide-react";
 type Props = {
   artwork: Artwork;
   actions?: ReactNode;
+  children?: ReactNode;
   imgWidth?: number; // IIIF width (400 für Cards)
   onDelete?: (id: number) => void;
 };
@@ -19,6 +20,7 @@ const TITLE_CLAMP_2 =
 export function ArtworkCard({
   artwork,
   actions,
+  children,
   imgWidth = 400,
   onDelete,
 }: Props) {
@@ -125,6 +127,7 @@ export function ArtworkCard({
           )}
         </div>
       </div>
+      {children}
     </article>
   );
 }
